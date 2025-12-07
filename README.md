@@ -5,7 +5,6 @@
 ```shell
 git clone https://github.com/pbing/sokoban2.git
 cd sokoban2
-mkdir build
 cmake -G Ninja -B build
 cmake --build build
 ```
