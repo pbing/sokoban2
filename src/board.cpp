@@ -74,7 +74,7 @@ void movePlayer(board_t &brd, const coord_t &dir) {
     brd[pos1.y][pos1.x] = '@';
   } else if (curr == '+' && nxt1 == '.') {
     brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '@';
+    brd[pos1.y][pos1.x] = '+';
   } else if (curr == '@' && nxt1 == '$' && nxt2 == ' ') {
     brd[pos.y][pos.x] = ' ';
     brd[pos1.y][pos1.x] = '@';
