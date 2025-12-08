@@ -27,15 +27,15 @@ void print(const board_t &brd, const int level) {
 void wprint(WINDOW *win, const board_t &brd, const int level) {
   mvwprintw(win, 0, 1, "Level: %d", level);
 
-  for (size_t i = 0; i < brd.size(); ++i)
+  for (size_t i = 0; i != brd.size(); ++i)
     mvwprintw(win, i + 1, 1, brd[i].c_str());
 }
 
 // Find player coordinate.
 coord_t findPlayer(const board_t &brd) {
   coord_t dir{};
-  for (auto y = 0; y < static_cast<int>(brd.size()); ++y)
-    for (auto x = 0; x < static_cast<int>(brd[y].size()); ++x) {
+  for (auto y = 0; y != static_cast<int>(brd.size()); ++y)
+    for (auto x = 0; x != static_cast<int>(brd[y].size()); ++x) {
       const auto c = brd[y][x];
       if (c == '@' || c == '+') {
         return (dir = {.x = x, .y = y});
@@ -46,8 +46,8 @@ coord_t findPlayer(const board_t &brd) {
 
 // Check if all crates are at their final positions.
 bool isFinished(const board_t &brd) {
-  for (auto y = 0U; y < brd.size(); ++y)
-    for (auto x = 0U; x < brd[y].size(); ++x)
+  for (auto y = 0U; y != brd.size(); ++y)
+    for (auto x = 0U; x != brd[y].size(); ++x)
       if (brd[y][x] == '$')
         return false;
   return true;
