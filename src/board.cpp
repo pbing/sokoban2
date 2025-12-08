@@ -26,29 +26,31 @@ void print(const board_t &brd, const int level) {
 void wprint(WINDOW *win, const board_t &brd, const int level) {
   mvwprintw(win, 0, 1, "Level: %d", level);
 
-  for (auto i = 0; i != static_cast<int>(brd.size()); ++i)
-    mvwprintw(win, i + 1, 1, brd[i].c_str());
+  for (auto i{1}; const auto &row : brd)
+    mvwprintw(win, i++, 1, row.c_str());
 }
 
 // Find player coordinate.
 coord_t findPlayer(const board_t &brd) {
   coord_t dir{};
-  for (auto y = 0; y != static_cast<int>(brd.size()); ++y)
-    for (auto x = 0; x != static_cast<int>(brd[y].size()); ++x) {
-      const auto c = brd[y][x];
-      if (c == '@' || c == '+') {
+  for (auto y{0}; const auto &row : brd) {
+    for (auto x{0}; const auto &tile : row) {
+      if (tile == '@' || tile == '+') {
         return (dir = {.x = x, .y = y});
       }
+      ++x;
     }
+    ++y;
+  }
   return dir;
 }
 
 // Check if all crates are at their final positions.
 bool isFinished(const board_t &brd) {
-  for (auto y = 0U; y != brd.size(); ++y)
-    for (auto x = 0U; x != brd[y].size(); ++x)
-      if (brd[y][x] == '$')
-        return false;
+  for (const auto &row : brd)
+    if (std::ranges::contains(row, '$'))
+      return false;
+
   return true;
 }
 
@@ -58,53 +60,53 @@ void movePlayer(board_t &brd, const coord_t &dir) {
   const auto pos1 = pos + dir;
   const auto pos2 = pos + 2 * dir;
 
-  const auto curr = brd[pos.y][pos.x];
-  const auto nxt1 = brd[pos1.y][pos1.x];
-  const auto nxt2 = brd[pos2.y][pos2.x];
+  auto &curr = brd[pos.y][pos.x];
+  auto &nxt1 = brd[pos1.y][pos1.x];
+  auto &nxt2 = brd[pos2.y][pos2.x];
 
   if (curr == '@' && nxt1 == ' ') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '@';
+    curr = ' ';
+    nxt1 = '@';
   } else if (curr == '@' && nxt1 == '.') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '+';
+    curr = ' ';
+    nxt1 = '+';
   } else if (curr == '+' && nxt1 == ' ') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '@';
+    curr = '.';
+    nxt1 = '@';
   } else if (curr == '+' && nxt1 == '.') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '+';
+    curr = '.';
+    nxt1 = '+';
   } else if (curr == '@' && nxt1 == '$' && nxt2 == ' ') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '@';
-    brd[pos2.y][pos2.x] = '$';
+    curr = ' ';
+    nxt1 = '@';
+    nxt2 = '$';
   } else if (curr == '@' && nxt1 == '$' && nxt2 == '.') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '@';
-    brd[pos2.y][pos2.x] = '*';
+    curr = ' ';
+    nxt1 = '@';
+    nxt2 = '*';
   } else if (curr == '@' && nxt1 == '*' && nxt2 == ' ') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '+';
-    brd[pos2.y][pos2.x] = '$';
+    curr = ' ';
+    nxt1 = '+';
+    nxt2 = '$';
   } else if (curr == '@' && nxt1 == '*' && nxt2 == '.') {
-    brd[pos.y][pos.x] = ' ';
-    brd[pos1.y][pos1.x] = '+';
-    brd[pos2.y][pos2.x] = '*';
+    curr = ' ';
+    nxt1 = '+';
+    nxt2 = '*';
   } else if (curr == '+' && nxt1 == '$' && nxt2 == ' ') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '@';
-    brd[pos2.y][pos2.x] = '$';
+    curr = '.';
+    nxt1 = '@';
+    nxt2 = '$';
   } else if (curr == '+' && nxt1 == '$' && nxt2 == '.') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '@';
-    brd[pos2.y][pos2.x] = '*';
+    curr = '.';
+    nxt1 = '@';
+    nxt2 = '*';
   } else if (curr == '+' && nxt1 == '*' && nxt2 == ' ') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '+';
-    brd[pos2.y][pos2.x] = '$';
+    curr = '.';
+    nxt1 = '+';
+    nxt2 = '$';
   } else if (curr == '+' && nxt1 == '*' && nxt2 == '.') {
-    brd[pos.y][pos.x] = '.';
-    brd[pos1.y][pos1.x] = '+';
-    brd[pos2.y][pos2.x] = '*';
+    curr = '.';
+    nxt1 = '+';
+    nxt2 = '*';
   }
 }
