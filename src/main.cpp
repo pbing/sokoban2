@@ -75,5 +75,10 @@ done:
   delwin(win);
   endwin();
 
+  if (isFinished(board))
+    std::puts("You won!");
+  else
+    std::puts("Better luck next time!");
+
   return 0;
 }
