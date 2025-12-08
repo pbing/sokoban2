@@ -1,33 +1,32 @@
+#include <algorithm>
 #include <curses.h>
 #include <iostream>
 #include <print>
+#include <string>
 
 #include "board.hpp"
 
 int height(const board_t &brd) { return brd.size(); };
 
+// https://youtu.be/eJCA2fynzME?t=812
 int width(const board_t &brd) {
-  auto maxCols{0};
-  for (auto &row : brd) {
-    const int cols = row.size();
-    if (maxCols < cols)
-      maxCols = cols;
-  }
-  return maxCols;
+  const auto it =
+      std::ranges::max_element(brd, {}, [](const auto &p) { return p.size(); });
+  return it->size();
 }
 
 void print(const board_t &brd, const int level) {
   std::println("Level: {}", level);
 
   for (const auto &row : brd)
-    std::cout << row << std::endl;
+    std::cout << row << '\n';
 }
 
 // Print with ncurses.
 void wprint(WINDOW *win, const board_t &brd, const int level) {
   mvwprintw(win, 0, 1, "Level: %d", level);
 
-  for (size_t i = 0; i != brd.size(); ++i)
+  for (auto i = 0; i != static_cast<int>(brd.size()); ++i)
     mvwprintw(win, i + 1, 1, brd[i].c_str());
 }
 
