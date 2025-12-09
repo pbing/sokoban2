@@ -32,17 +32,17 @@ void wprint(WINDOW *win, const board_t &brd, const int level) {
 
 // Find player coordinate.
 coord_t findPlayer(const board_t &brd) {
-  coord_t dir{};
+  coord_t pos{};
   for (auto y{0}; const auto &row : brd) {
     for (auto x{0}; const auto &tile : row) {
       if (tile == '@' || tile == '+') {
-        return (dir = {.x = x, .y = y});
+        return (pos = {.x = x, .y = y});
       }
       ++x;
     }
     ++y;
   }
-  return dir;
+  return pos;
 }
 
 // Check if all crates are at their final positions.
